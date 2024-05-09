@@ -49,12 +49,12 @@ while running:
     
     # Draw digital clock (hours and minutes)
     text_hm = clock_font.render(hours_minutes, True, text_color)
-    rect_hm = text_hm.get_rect(center=(x_center, y_center - 80))
+    rect_hm = text_hm.get_rect(center=(x_center, y_center - 60))
     screen.blit(text_hm, rect_hm)
     
     # Draw digital seconds
     text_sec = sec_font.render(f"{seconds:02}", True, text_color)
-    rect_sec = text_sec.get_rect(center=(x_center, y_center + 100))
+    rect_sec = text_sec.get_rect(center=(x_center, y_center + 120))
     screen.blit(text_sec, rect_sec)
 
     for angle in range(0, 360, 6):  # Draw up to the current second
