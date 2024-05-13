@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Clock</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: red;
+            font-family: monospace;
+            font-size: 3em;
+        }
+    </style>
+</head>
+<body>
+    <div id="timecode-display"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+// Client-side code (in HTML or JavaScript)
+const socket = io();
+
+socket.on('connect', () => {
+    console.log('Connected to server');
+});
+
+socket.on('timecode', timecode => {
+    console.log('Received timecode:', timecode);
+    // Update the displayed timecode on the webpage
+    document.getElementById('timecode-display').innerText = timecode;
+});
+
+
+    </script>
+</body>
+</html>
