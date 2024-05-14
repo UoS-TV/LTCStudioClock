@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'Digital'; /* You can name it anything you want */
+    src: url('5x7-matrix.ttf') format('truetype'); /* Update the path */
+  }
+  
+  body {
+    font-family: 'Digital', 'Courier New', Courier, monospace, sans-serif;
+    margin: 0;
+    height: 100vh;
+    background-color: black;
+    color: red;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #time-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #hours-minutes {
+    font-size: 120px; /* Adjust according to your preference */
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #seconds {
+    font-size: 72px; /* Adjust according to your preference */
+    position: absolute;
+    top: 55%; /* Adjusted for better alignment */
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #frames {
+    font-size: 48px; /* Adjust according to your preference */
+    position: absolute;
+    top: 65%; /* Adjusted for better alignment */
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #seconds-container,
+  #hours-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+  }
+  
+  .dot {
+    position: absolute;
+    width: 3vh; /* Adjust according to your preference */
+    height: 3vh; /* Adjust according to your preference */
+    border-radius: 50%;
+  }
+  
+  /* Add animation for opacity change */
+  @keyframes fade {
+    0% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
