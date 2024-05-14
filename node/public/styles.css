@@ -1,46 +1,49 @@
 @font-face {
-    font-family: 'Digital'; /* You can name it anything you want */
-    src: url('5x7-matrix.ttf') format('truetype'); /* Update the path */
+    font-family: 'Digital';
+    src: url('5x7-matrix.ttf') format('truetype'); 
+    /* src: url('mobitec-13-11.ttf') format('truetype'); */
   }
   
   body {
-    font-family: 'Digital', 'Courier New', Courier, monospace, sans-serif;
+    font-family: 'Digital', Courier, sans-serif;
     margin: 0;
     height: 100vh;
     background-color: black;
     color: red;
-    font-variant-numeric: tabular-nums;
+    /* font-variant-numeric:proportional-nums; */
   }
 
-  #time-container {
+  /* #time-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
+  } */
   
   #hours-minutes {
-    font-size: 120px; /* Adjust according to your preference */
+    font-size: 15vh; /* Adjust according to your preference */
     position: absolute;
     top: 40%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
   }
   
   #seconds {
-    font-size: 72px; /* Adjust according to your preference */
+    font-size: 10vh; /* Adjust according to your preference */
     position: absolute;
-    top: 55%; /* Adjusted for better alignment */
+    top: 52%;
     left: 50%;
-    transform: translate(-50%, -50%);
-  }
+    transform: translateX(-50%);
+}
+
   
   #frames {
-    font-size: 48px; /* Adjust according to your preference */
+    font-size: 5vh; /* Adjust according to your preference */
     position: absolute;
     top: 65%; /* Adjusted for better alignment */
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+    /* text-align: center; */
   }
   
   #seconds-container,
@@ -48,7 +51,11 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(-90deg);
+    /* width: 70vw; */
+    /* position:relative;
+    vertical-align: middle; */
+    
+    /* transform: translate(-50%, -50%) rotate(-90deg); */
   }
   
   .dot {
@@ -56,6 +63,8 @@
     width: 3vh; /* Adjust according to your preference */
     height: 3vh; /* Adjust according to your preference */
     border-radius: 50%;
+    transform: translate(-50%,-50%);
+    transform-origin: center;
   }
   
   /* Add animation for opacity change */
