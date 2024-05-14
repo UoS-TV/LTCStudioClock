@@ -1,6 +1,7 @@
 import socket
 import struct
 import time
+from datetime import datetime, time, timedelta
 from threading import Thread
 import subprocess
 
@@ -25,12 +26,10 @@ def serve_modified_ntp(server_socket, public_ntp_server, ltc_reader):
             modified_timestamp = modify_timestamp(public_timestamp, ltc_timecode)
 
             # Construct modified NTP packet
-            modified_ntp_packet = construct_modified_ntp_packet(public_ntp_response, modified_timestamp)
+            modified_ntp_packet = construct_modified_ntp_packet(modified_timestamp)
             
             # Check if modified packet is successfully constructed
             if modified_ntp_packet is not None:
-                # Print hexadecimal representation of modified NTP packet
-                print("Modified NTP packet:", modified_ntp_packet.hex())
 
                 # Send modified NTP packet to client
                 server_socket.sendto(modified_ntp_packet, client_address)
@@ -65,10 +64,8 @@ def extract_timestamp(ntp_response):
         # Extract the 8-byte timestamp from the NTP response
         return struct.unpack("!Q", ntp_response[40:48])[0]
     except Exception as e:
-        print("Failed to extract timestamp from NTP response:", e)
+        print("Failed to extract timestamp from public NTP response:", e)
         return None
-
-from datetime import datetime, time, timedelta
 
 def modify_timestamp(timestamp, ltc_timecode):
     try:
@@ -83,34 +80,39 @@ def modify_timestamp(timestamp, ltc_timecode):
 
         # Combine date from NTP timestamp with time from LTC timecode
         modified_time = datetime.combine(ntp_time.date(), ltc_time)
-        print("Mod Time:",modified_time)
-        # Calculate the difference between the modified time and the NTP epoch
-        ntp_epoch = datetime(1900, 1, 1)
-        time_diff = modified_time - ntp_epoch
-        print(time_diff)
-        # Calculate the modified timestamp in NTP format
-        modified_timestamp = int(time_diff.total_seconds() * (2 ** 32))
-        print(modified_timestamp)
-        return modified_timestamp
+        
+        print("Modified Time:", modified_time)
+        
+        return modified_time
+        
     except Exception as e:
         print("Failed to modify timestamp with LTC timecode:", e)
         return None
 
+def construct_modified_ntp_packet(modified_timestamp):
+    # Set the NTP packet fields
+    leap_indicator = 0  # No leap second warning
+    version_number = 4  # NTP version 4
+    mode = 4  # Server mode
 
+    stratum = 1  # Stratum level (we can set this to any value for testing)
+    poll = 4  # Max polling interval
+    precision = -6  # Clock precision (about 15.26 microseconds)
 
+    root_delay = 0
+    root_dispersion = 0
+    reference_identifier = b"LTC"
+    
+    transmit_timestamp = int((modified_timestamp - datetime(1900, 1, 1)).total_seconds())
+    print('Transmit Timestamp', transmit_timestamp)
 
+    # Pack the fields into a binary NTP packet
+    ntp_packet = struct.pack("!B B B b I I I I 4s", (leap_indicator << 6 | version_number << 3 | mode),
+                             stratum, poll, precision,
+                             int(root_delay), int(root_dispersion), int(transmit_timestamp), 0,
+                             reference_identifier)
 
-
-# Function to construct modified NTP packet
-def construct_modified_ntp_packet(ntp_response, modified_timestamp):
-    try:
-        # Replace the original timestamp with the modified timestamp
-        modified_packet = bytearray(ntp_response)
-        modified_packet[40:48] = struct.pack("!Q", modified_timestamp)
-        return modified_packet
-    except Exception as e:
-        print("Failed to construct modified NTP packet:", e)
-        return None
+    return ntp_packet
 
 # Example function to read LTC timecode from ltcdump output
 class LTCReader:
