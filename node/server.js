@@ -16,6 +16,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+let lastTimecodeReceived = Date.now();
+
 // Start the arecord process to continuously read LTC timecode
 const arecordProcess = exec('arecord -D hw:3,0 -f dat -r 48000 -c 2 | stdbuf -o0 ltcdump -');
 arecordProcess.stdout.on('data', data => {
@@ -27,6 +29,7 @@ arecordProcess.stdout.on('data', data => {
                 const timecode = match[0]; // Extract matched timecode
                 console.log('Extracted timecode:', timecode);
                 io.sockets.emit('timecode', timecode); // Emit timecode to clients
+                lastTimecodeReceived = Date.now(); // Update last timecode received timestamp
             }
         }
     });
@@ -46,6 +49,15 @@ arecordProcess.on('error', error => {
     console.error('arecord process error:', error);
     process.exit(1); // Exit the process in case of error
 });
+
+// Restart server if no timecode received after 15 seconds
+const restartThreshold = 15 * 1000; // 15 seconds in milliseconds
+setInterval(() => {
+    if (Date.now() - lastTimecodeReceived > restartThreshold) {
+        console.log('No timecode received. Restarting server...');
+        process.exit(1);
+    }
+}, restartThreshold);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
